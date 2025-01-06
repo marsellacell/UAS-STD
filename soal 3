@@ -1,0 +1,88 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct InfoType {
+    string nama;
+    int umur;
+};
+
+struct Node {
+    InfoType info;
+    Node* children[10]; 
+    int childCount;     
+};
+
+using Tree = Node*;
+
+Node* createNode(string nama, int umur) {
+    Node* newNode = new Node;
+    newNode->info.nama = nama;
+    newNode->info.umur = umur;
+    newNode->childCount = 0;
+    for (int i = 0; i < 10; i++) {
+        newNode->children[i] = nullptr;
+    }
+    return newNode;
+}
+
+void addChild(Node* parent, Node* child) {
+    if (parent->childCount < 10) {
+        parent->children[parent->childCount++] = child;
+    } else {
+        cout << "Node " << parent->info.nama << " sudah memiliki jumlah anak maksimum." << endl;
+    }
+}
+
+Node* cariUmur(int x, Node* N) {
+    if (N == nullptr) {
+        return nullptr;
+    }
+    if (N->info.umur == x) {
+        return N;
+    }
+    for (int i = 0; i < N->childCount; i++) {
+        Node* result = cariUmur(x, N->children[i]);
+        if (result != nullptr) {
+            return result;
+        }
+    }
+    return nullptr;
+}
+
+int main() {
+    Tree root = createNode("Ari", 50);
+    Node* ina = createNode("Ina", 25);
+    Node* ali = createNode("Ali", 65);
+    addChild(root, ina);
+    addChild(root, ali);
+
+    Node* ira = createNode("Ira", 10);
+    Node* isa = createNode("Isa", 30);
+    addChild(ina, ira);
+    addChild(ina, isa);
+
+    Node* abi = createNode("Abi", 60);
+    Node* ani = createNode("Ani", 70);
+    addChild(ali, abi);
+    addChild(ali, ani);
+
+    addChild(ira, createNode("Fei", 5));
+    addChild(ira, createNode("Joe", 15));
+
+    addChild(ani, createNode("Leni", 68));
+    addChild(ani, createNode("Sari", 72));
+
+    int umurDicari = 10;
+
+    Node* hasil = cariUmur(umurDicari, root);
+
+    if (hasil != nullptr) {
+        cout << "Node ditemukan: " << endl;
+        cout << "Nama: " << hasil->info.nama << ", Umur: " << hasil->info.umur << endl;
+    } else {
+        cout << "Node dengan umur " << umurDicari << " tidak ditemukan." << endl;
+    }
+
+    return 0;
+}
