@@ -1,0 +1,130 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+struct elementEdge;
+struct elementNode;
+
+typedef elementEdge* adrEdge;
+typedef elementNode* adrNode;
+
+struct elementEdge {
+    char id;
+    int time;
+    adrEdge next;
+};
+
+struct elementNode {
+    char id;
+    adrEdge firstEdge;
+    adrNode next;
+};
+
+struct Graf {
+    adrNode start;
+};
+
+adrEdge create_New_Edge(char id, int time) {
+    adrEdge newEdge = new elementEdge;
+    newEdge->id = id;
+    newEdge->time = time;
+    newEdge->next = NULL;
+    return newEdge;
+}
+adrNode findNode(Graf &G, char id) {
+    adrNode current = G.start;
+    while (current != NULL) {
+        if (current->id == id) {
+            return current; 
+        }
+        current = current->next; 
+    }
+    return NULL;
+}
+
+void insert_New_Edge(Graf &G, adrNode N, adrEdge E) {
+    // TODO: Implementation your logic here
+    if (N != nullptr) {
+        E->next = N->firstEdge;
+        N->firstEdge = E;
+    } else {
+        cout << "Node tidak ditemukan!" << endl;
+    }
+}
+
+void connecting(Graf &G, char srcID, char destID, int time) {
+    // TODO: Implementation your logic here
+    adrNode srcNode = findNode(G, srcID);
+    if (srcNode != nullptr) {
+        adrEdge newEdge = create_New_Edge(destID, time);
+        insert_New_Edge(G, srcNode, newEdge);
+    } else {
+        cout << "Node sumber dengan ID " << srcID << "tidak ditemukan!" << endl;
+    }
+}
+void printGraph(Graf &G) {
+    adrNode currentNode = G.start;
+    while (currentNode != NULL) {
+        cout << "Node " << currentNode->id << ": ";
+        adrEdge currentEdge = currentNode->firstEdge;
+        while (currentEdge != NULL) {
+            cout << "-> " << currentEdge->id << "(" << currentEdge->time << ") ";
+            currentEdge = currentEdge->next;
+        }
+        cout << endl;
+        currentNode = currentNode->next;
+    }
+}
+
+int main() {
+    Graf G;
+    G.start = NULL;
+adrNode nodeA = new elementNode;
+    nodeA->id = 'A';
+    nodeA->firstEdge = NULL;
+    nodeA->next = NULL;
+
+    adrNode nodeB = new elementNode;
+    nodeB->id = 'B';
+    nodeB->firstEdge = NULL;
+    nodeB->next = NULL;
+
+    adrNode nodeC = new elementNode;
+    nodeC->id = 'C';
+    nodeC->firstEdge = NULL;
+    nodeC->next = NULL;
+
+    adrNode nodeD = new elementNode;
+    nodeD->id = 'D';
+    nodeD->firstEdge = NULL;
+    nodeD->next = NULL;
+
+    adrNode nodeE = new elementNode;
+    nodeE->id = 'E';
+    nodeE->firstEdge = NULL;
+    nodeE->next = NULL;
+
+    adrNode nodeF = new elementNode;
+    nodeF->id = 'F';
+    nodeF->firstEdge = NULL;
+    nodeF->next = NULL;
+
+    G.start = nodeA;
+    nodeA->next = nodeB;
+    nodeB->next = nodeC;
+    nodeC->next = nodeD;
+    nodeD->next = nodeE;
+    nodeE->next = nodeF;
+connecting(G, 'A', 'B', 5);
+    connecting(G, 'A', 'E', 2);
+    connecting(G, 'B', 'D', 3);
+    connecting(G, 'D', 'C', 8);
+    connecting(G, 'D', 'F', 7);
+    connecting(G, 'F', 'E', 3);
+    connecting(G, 'F', 'C', 5);
+
+    printGraph(G);
+
+    return 0;
+}
